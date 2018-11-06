@@ -3,7 +3,9 @@ package aplicacao;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import entities.Produto;
 
@@ -38,12 +40,17 @@ public class Programa {
 					.reduce(0.0, (x,y) -> x + y) / lista.size();
 			
 			System.out.println("Preco médio: R$ "+ String.format("%.2f",precoMedio));
+			System.out.println();
 			
-			/*
-			for(Produto p : lista) {
-				System.out.println(p);
-			}
-			*/
+			Comparator<String> comp = (s1, s2) -> s1.toUpperCase().compareTo(s2.toUpperCase());
+			
+			List<String> nomes = lista.stream()
+					.filter(p -> p.getPreco() < precoMedio)
+					.map(p -> p.getNome())
+					.sorted(comp.reversed())
+					.collect(Collectors.toList());
+			
+			nomes.forEach(System.out::println);
 			
 		} catch (Exception e) {
 			System.out.println("Erro: "+e.getMessage());
