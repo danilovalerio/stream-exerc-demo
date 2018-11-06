@@ -2,6 +2,10 @@ package aplicacao;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import entities.Produto;
 
 /*
  * Programa que lê um conjunto de produtos
@@ -20,17 +24,29 @@ public class Programa {
 		
 		
 		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-			
+			List<Produto> lista = new ArrayList<>();			
 			String linha = br.readLine();
+			
 			while(linha != null) {
-				
-				System.out.println("ok");
-				
+				String[] campos = linha.split(",");
+				lista.add(new Produto(campos[0],Double.parseDouble(campos[1])));
 				linha = br.readLine();
 			}
 			
+			double precoMedio = lista.stream()
+					.map(p -> p.getPreco())
+					.reduce(0.0, (x,y) -> x + y) / lista.size();
+			
+			System.out.println("Preco médio: R$ "+ String.format("%.2f",precoMedio));
+			
+			/*
+			for(Produto p : lista) {
+				System.out.println(p);
+			}
+			*/
+			
 		} catch (Exception e) {
-			// TODO: handle exception
+			System.out.println("Erro: "+e.getMessage());
 		}
 		
 	}
